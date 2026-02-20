@@ -5,12 +5,16 @@
 	<parent>
 		<groupId>net.zoostar.boot</groupId>
 		<artifactId>zoostar-boot-starter-parent</artifactId>
-		<version>3.4.0</version>
+		<version>3.4.1</version>
 	</parent>
 	<groupId>com.zoostarinc.lez</groupId>
 	<artifactId>lets-encrypt-zoostar</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<dependencies>
+		<dependency>
+			<groupId>net.zoostar.common</groupId>
+			<artifactId>zoostar-common</artifactId>
+		</dependency>
 		<!-- Bouncy Castle Cryptography Dependencies -->
 		<dependency>
 			<groupId>org.shredzone.acme4j</groupId>
