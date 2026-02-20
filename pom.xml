@@ -2,14 +2,15 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.zoostarinc.lez</groupId>
+	<artifactId>lets-encrypt-zoostar</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+	<packaging>war</packaging>
 	<parent>
 		<groupId>net.zoostar.boot</groupId>
 		<artifactId>zoostar-boot-starter-parent</artifactId>
 		<version>3.4.1</version>
 	</parent>
-	<groupId>com.zoostarinc.lez</groupId>
-	<artifactId>lets-encrypt-zoostar</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
 	<dependencies>
 		<dependency>
 			<groupId>net.zoostar.common</groupId>
@@ -34,30 +35,33 @@
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-security</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
-		</dependency>
-<!--		<dependency>-->
-<!--			<groupId>org.springframework.boot</groupId>-->
-<!--			<artifactId>spring-boot-starter-oauth2-client</artifactId>-->
-<!--		</dependency>-->
+		<!--		<dependency>-->
+		<!--			<groupId>org.springframework.boot</groupId>-->
+		<!--			<artifactId>spring-boot-starter-security</artifactId>-->
+		<!--		</dependency>-->
+		<!--		<dependency>-->
+		<!--			<groupId>org.springframework.boot</groupId>-->
+		<!--
+		<artifactId>spring-boot-starter-oauth2-resource-server</artifactId>-->
+		<!--		</dependency>-->
+		<!--		<dependency>-->
+		<!--			<groupId>org.springframework.boot</groupId>-->
+		<!--			<artifactId>spring-boot-starter-oauth2-client</artifactId>-->
+		<!--		</dependency>-->
 		<!-- Bouncy Castle Cryptography Dependencies -->
 		<dependency>
-			<groupId>org.shredzone.acme4j</groupId>
-			<artifactId>acme4j-client</artifactId>
-			<version>4.0.0</version>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcprov-jdk18on</artifactId>
+			<version>1.78.1</version>
 		</dependency>
 		<dependency>
-			<groupId>org.shredzone.acme4j</groupId>
-			<artifactId>acme4j-smime</artifactId>
-			<version>4.0.0</version>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcpkix-jdk18on</artifactId>
+			<version>1.78.1</version>
 		</dependency>
-
 		<!---->
 	</dependencies>
+	<build>
+		<finalName>lez</finalName>
+	</build>
 </project>
