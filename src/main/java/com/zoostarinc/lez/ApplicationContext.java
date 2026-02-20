@@ -1,8 +1,5 @@
 package com.zoostarinc.lez;
 
-import java.security.Security;
-
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,7 +34,7 @@ public class ApplicationContext {
 
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity security) throws Exception {
-		Security.addProvider(new BouncyCastleProvider());
+//		Security.addProvider(new BouncyCastleProvider());
 		return security.csrf(csrf -> csrf.disable())
 				.authorizeHttpRequests(authorize -> authorize
 				// Allow Swagger UI resources (CSS, JS, HTML, images)
