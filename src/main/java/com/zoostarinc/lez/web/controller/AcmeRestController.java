@@ -4,9 +4,9 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.security.GeneralSecurityException;
-import java.security.KeyPair;
 import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 
 import javax.security.auth.x500.X500Principal;
 
@@ -40,44 +40,37 @@ public class AcmeRestController implements InitializingBean {
 	}
 
 	@GetMapping(path = "/csr/generate", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<StringWrapper> generateCSR(@RequestParam String domainCommonName) {
+	public ResponseEntity<StringWrapper> generateCSR(@RequestParam String domainCommonName) throws IOException,
+			NoSuchAlgorithmException, NoSuchProviderException, OperatorCreationException {
+		
 		if(!StringUtils.hasText(domainCommonName)) {
 			throw new IllegalArgumentException("Domain Common Name is a Required Param!");
 		}
 
-		KeyPair keyPair = null;
-		try {
-			
-			// Get the KeyPair Generator
-			var keyPairGenerator = KeyPairGenerator.getInstance("RSA", BouncyCastleProvider.PROVIDER_NAME);
-			keyPairGenerator.initialize(4096);
-			keyPair = keyPairGenerator.generateKeyPair();
+		// Get the KeyPair Generator
+		var keyPairGenerator = KeyPairGenerator.getInstance("RSA", BouncyCastleProvider.PROVIDER_NAME);
+		keyPairGenerator.initialize(4096);
+		var keyPair = keyPairGenerator.generateKeyPair();
 
-			// Create a signer using the private key and a signature algorithm (e.g. SHA256withRSA)
-			var csBuilder = new JcaContentSignerBuilder("SHA256withRSA");
-			var signer = csBuilder.build(keyPair.getPrivate());
+		// Create a signer using the private key and a signature algorithm (e.g. SHA256withRSA)
+		var csBuilder = new JcaContentSignerBuilder("SHA256withRSA");
+		var signer = csBuilder.build(keyPair.getPrivate());
 
-			// Define the subject DN (e.g. "CN=Requested Test Certificate, O=Test Inc, C=US")
-			var subject = new X500Principal("CN=" + domainCommonName);
+		// Define the subject DN (e.g. "CN=Requested Test Certificate, O=Test Inc, C=US")
+		var subject = new X500Principal("CN=" + domainCommonName);
 
-			// Build the CSR request
-			var p10Builder = new JcaPKCS10CertificationRequestBuilder(subject, keyPair.getPublic());
+		// Build the CSR request
+		var p10Builder = new JcaPKCS10CertificationRequestBuilder(subject, keyPair.getPublic());
 
-			// Generate the CSR object
-			var csr = p10Builder.build(signer);
-			try (JcaPEMWriter pemWriter = new JcaPEMWriter(new BufferedWriter(new FileWriter(new File(userHome, domainCommonName + ".csr"))))) {
-				pemWriter.writeObject(csr);
-				log.info("{}.", "Cert Signing Request completed successfully");
-			}
-		} catch (GeneralSecurityException e) {
-			log.error("Error getting KeyPair Generator instance: {}", e.getMessage());
-		} catch (OperatorCreationException e) {
-			log.error("Error signing Private Key: {}", e.getMessage());
-		} catch (IOException e) {
-			log.error("Error with PEM Writer: {}", e.getMessage());
+		// Generate the CSR object
+		var csr = p10Builder.build(signer);
+		var file = new File(userHome, domainCommonName + ".csr");
+		try (JcaPEMWriter pemWriter = new JcaPEMWriter(new BufferedWriter(new FileWriter(file)))) {
+			pemWriter.writeObject(csr);
+			log.info("Cert Signing Request completed successfully at: {}", file.getCanonicalPath());
 		}
 
-		return ResponseEntity.ok(new StringWrapper(keyPair == null ? "" : keyPair.getPublic().toString()));
+		return ResponseEntity.ok(new StringWrapper(file.getCanonicalPath()));
 	}
 
 }
