@@ -3,9 +3,6 @@ package com.zoostarinc.lez.web.controller;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
-import java.security.Security;
-
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,7 +20,6 @@ class AcmeRestControllerTest extends AbstractCommonTest {
 	@Test
 	void testGenerateCSR200() throws Exception {
 		// given
-		Security.addProvider(new BouncyCastleProvider());
 		String url = "/csr/generate?domainCommonName=junit";
 		
 		// then
@@ -36,7 +32,6 @@ class AcmeRestControllerTest extends AbstractCommonTest {
 	@Test
 	void testGenerateCSRRequiredRequestParamMissing() throws Exception {
 		// given
-		Security.addProvider(new BouncyCastleProvider());
 		String url = "/csr/generate?domainCommonName=";
 		
 		// then
