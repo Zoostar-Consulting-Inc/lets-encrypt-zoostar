@@ -40,12 +40,17 @@ public class AcmeRestController implements InitializingBean {
 	}
 
 	@GetMapping(path = "/csr/generate", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<StringWrapper> generateCSR(@RequestParam String domainCommonName) throws IOException,
+	public ResponseEntity<StringWrapper> generateCertificate(@RequestParam String domainCommonName) throws IOException,
 			NoSuchAlgorithmException, NoSuchProviderException, OperatorCreationException {
 		
 		if(!StringUtils.hasText(domainCommonName)) {
 			throw new IllegalArgumentException("Domain Common Name is a Required Param!");
 		}
+
+		return ResponseEntity.ok(new StringWrapper(generateCSR(domainCommonName)));
+	}
+	
+	protected String generateCSR(String domainCommonName) throws NoSuchAlgorithmException, NoSuchProviderException, OperatorCreationException, IOException {
 
 		// Get the KeyPair Generator
 		var keyPairGenerator = KeyPairGenerator.getInstance("RSA", BouncyCastleProvider.PROVIDER_NAME);
@@ -69,8 +74,8 @@ public class AcmeRestController implements InitializingBean {
 			pemWriter.writeObject(csr);
 			log.info("Cert Signing Request completed successfully at: {}", file.getCanonicalPath());
 		}
-
-		return ResponseEntity.ok(new StringWrapper(file.getCanonicalPath()));
+		
+		return file.getCanonicalPath();
 	}
 
 }
